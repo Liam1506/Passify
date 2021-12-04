@@ -23,22 +23,28 @@ if command == "POST":
 
     	
         finalString = bytes(array2)
+        #print(finalString.decode("utf-8"))
 
 
-
-        with open("keys2021//"+securityNumber+".py", "w") as f:
+        with open("keys2021//"+securityNumber+".py", "w", encoding='utf-8') as f:
             verify = verification.split(",")
-            f.write(decrypt(finalString.decode("utf-8"), verify[1])+";"+verify[0])
+            f.write(encrypt(finalString.decode("utf-8"), verify[1])+";zap;"+verify[0])
     except Exception as e:
         print("{ \n "+'"'+"result"+'"' +": "+'"'+str(e)+'"'+"\n }")
 		#print("Finish Writing")
 elif command == "GET":
     try:
-        with open("keys2021//"+securityNumber+".py", "r") as f:
-            code, verificationNumber = f.readline().split(";")
+        with open("keys2021//"+securityNumber+".py", "r", encoding='utf-8') as f:
+            code, verificationNumber = f.readline().split(";zap;")
             verify = verification.split(",")
         if verificationNumber == verify[0]:
-            print("{ \n "+'"'+"result"+'"' +": "+'"'+decrypt(code, verify[1])+'"'+"\n }")
+            #print(decrypt(code, verify[1]))
+
+            password = decrypt(code, verify[1])
+            if password[0] == "}":
+                password = r=password[:0]+password[1:]
+                
+            print("{ \n "+'"'+"result"+'"' +": "+'"'+password+'"'+"\n }")
             with open("keys2021//"+securityNumber+".py", "w") as f2:
 
                 f2.write("Access denied")
@@ -49,5 +55,15 @@ elif command == "GET":
             print("{ \n "+'"'+"result"+'"' +": "+'"'+"Access denied"+'"'+"\n }")
     except Exception as e:
         print("{ \n "+'"'+"result"+'"' +": "+'"'+"Access denied"+'"'+"\n }")
+
+
+
+
+
+
+
+
+
+
 
 
